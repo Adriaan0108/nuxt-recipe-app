@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    domains: ["https://cdn.dummyjson.com"],
+    domains: ["https://cdn.dummyjson.com", "https://www.themealdb.com"],
   },
 
   unhead: {

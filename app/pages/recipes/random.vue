@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { type MealsResponse } from "../../../types/types";
 
-const { id } = useRoute().params;
-
 const { data, error } = await useFetch<MealsResponse>(
-  `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
+  "https://www.themealdb.com/api/json/v1/1/random.php"
 );
 
 // Access the value inside the Ref
