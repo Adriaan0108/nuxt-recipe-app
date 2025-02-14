@@ -43,7 +43,12 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@nuxt/icon",
     "@nuxt/image",
+    "@pinia/nuxt",
   ],
+
+  pinia: {
+    storesDirs: ["./stores/**"],
+  },
 
   googleFonts: { families: { Montserrat: true } },
 });

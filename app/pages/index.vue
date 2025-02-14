@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AreaCard from "~/components/AreaCard.vue";
 import {
   type MealsResponse,
   type CategoriesResponse,
@@ -10,58 +9,63 @@ import {
   type Ingredient,
 } from "../../types/types";
 
-import { ref } from "vue";
-import IngredientCard from "~/components/IngredientCard.vue";
-
 definePageMeta({ layout: "home" }); // default layout will be used if not specified here
 
 // const { data, error } = await useFetch<MealsResponse>(
 //   "https://www.themealdb.com/api/json/v1/1/random.php"
 // );
 
-const { data: categoriesData, error: categoriesError } =
-  await useFetch<CategoriesResponse>(
-    "https://www.themealdb.com/api/json/v1/1/categories.php"
-  );
+const recipeStore = useRecipeStore();
 
-const categories = ref<Category[]>([]); // State for categories
+const fetchCategories = async () => {
+  await recipeStore.fetchCategories();
+};
 
-if (categoriesData.value && categoriesData.value.categories) {
-  categories.value = categoriesData.value.categories; // Update state
+await fetchCategories();
+
+const categories = ref<Category[]>([]);
+const categoriesData = recipeStore.categories;
+const categoriesError = recipeStore.categoriesError;
+
+if (categoriesData && categoriesData.length > 0) {
+  categories.value = categoriesData;
 } else {
   console.error(categoriesError?.value || "Error fetching categories");
 }
 
-// let activeTab = "categories";
 const activeTab = ref<"categories" | "countries" | "ingredients">("categories");
 
-const { data: areasData, error: areasError } = await useFetch<AreasResponse>(
-  "https://www.themealdb.com/api/json/v1/1/list.php?a=list"
-);
+const fetchAreas = async () => {
+  await recipeStore.fetchAreas();
+};
+
+await fetchAreas();
 
 const areas = ref<Area[]>([]);
+const areasData = recipeStore.areas;
+const areasError = recipeStore.areasError;
 
-if (areasData.value && areasData.value.meals) {
-  // areas.value = areasData.value.meals; // Update state
+if (areasData && areasData.length > 0) {
   // Filter out any areas with the name 'Unknown'
-  areas.value = areasData.value.meals.filter(
-    (area) => area.strArea !== "Unknown"
-  );
+  areas.value = areasData.filter((area) => area.strArea !== "Unknown");
 } else {
-  console.error(categoriesError?.value || "Error fetching areas");
+  console.error(areasError?.value || "Error fetching areas");
 }
 
-const { data: ingredientsData, error: ingredientsError } =
-  await useFetch<IngredientsResponse>(
-    "https://www.themealdb.com/api/json/v1/1/list.php?i=list"
-  );
+const fetchIngredients = async () => {
+  await recipeStore.fetchIngredients();
+};
+
+await fetchIngredients();
 
 const ingredients = ref<Ingredient[]>([]);
+const ingredientsData = recipeStore.ingredients;
+const ingredientsError = recipeStore.ingredientsError;
 
-if (ingredientsData.value && ingredientsData.value.meals) {
-  ingredients.value = ingredientsData.value.meals; // Update state
+if (ingredientsData && ingredientsData.length > 0) {
+  ingredients.value = ingredientsData;
 } else {
-  console.error(ingredientsData?.value || "Error fetching ingredients");
+  console.error(ingredientsError?.value || "Error fetching ingredients");
 }
 
 // Create a reactive reference to store the recipe
