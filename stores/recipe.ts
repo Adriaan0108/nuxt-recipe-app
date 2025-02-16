@@ -31,9 +31,14 @@ export const useRecipeStore = defineStore("recipe", () => {
   const ingredients = ref<Ingredient[]>([]);
   const ingredientsError = ref();
 
-  const mealsAreaCache = new Map<string, Filter[]>(); // Cache to store fetched meals
-  const mealsCategoryCache = new Map<string, Filter[]>();
-  const mealsIngredientCache = new Map<string, Filter[]>();
+  // const mealsAreaCache = new Map<string, Filter[]>(); // Cache to store fetched meals
+  // const mealsCategoryCache = new Map<string, Filter[]>();
+  // const mealsIngredientCache = new Map<string, Filter[]>();
+
+  // Make cache reactive and persistent
+  const mealsAreaCache = ref<Record<string, Filter[]>>({});
+  const mealsCategoryCache = ref<Record<string, Filter[]>>({});
+  const mealsIngredientCache = ref<Record<string, Filter[]>>({});
 
   const fetchCategories = async () => {
     // Check if categories already have valid data
@@ -103,6 +108,16 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   const fetchMealById = async (id: number | string) => {
     try {
+      // Check if meal already exists in store
+      const existingMeal = meals.value.find(
+        (meal) => meal.idMeal === id.toString()
+      );
+
+      if (existingMeal) {
+        recipe.value = existingMeal;
+        return;
+      }
+
       const res = await $fetch<MealsResponse>(`${baseUrl}lookup.php?i=${id}`);
 
       meals.value = res.meals ?? [];
@@ -127,32 +142,16 @@ export const useRecipeStore = defineStore("recipe", () => {
     }
   };
 
-  // const fetchMealsByArea = async (area: string) => {
-  //   if (
-  //     mealsFilter.value.length > 0 &&
-  //     mealsFilter.value.every((meal) => meal.idMeal && meal.strMeal)
-  //   ) {
-  //     console.log("Meals already fetched, skipping API call.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const res = await $fetch<FiltersResponse>(
-  //       `${baseUrl}filter.php?a=${area}`
-  //     );
-
-  //     mealsFilter.value = res.meals ?? [];
-  //   } catch (error) {
-  //     const message = "Error fetching recipes: " + error;
-  //     mealsFilterError.value = message;
-  //     console.log(message);
-  //   }
-  // };
-
   const fetchMealsByArea = async (area: string) => {
-    if (mealsAreaCache.has(area)) {
+    // if (mealsAreaCache.has(area)) {
+    //   console.log(`Meals for ${area} already fetched, using cache.`);
+    //   mealsFilter.value = mealsAreaCache.get(area) ?? [];
+    //   return;
+    // }
+
+    if (mealsAreaCache.value[area]) {
       console.log(`Meals for ${area} already fetched, using cache.`);
-      mealsFilter.value = mealsAreaCache.get(area) ?? [];
+      mealsFilter.value = mealsAreaCache.value[area];
       return;
     }
 
@@ -162,7 +161,8 @@ export const useRecipeStore = defineStore("recipe", () => {
       );
       const meals = res.meals ?? [];
 
-      mealsAreaCache.set(area, meals); // Store fetched meals in cache
+      // mealsAreaCache.set(area, meals); // Store fetched meals in cache
+      mealsAreaCache.value[area] = meals; // Store meals in reactive cache
       mealsFilter.value = meals;
     } catch (error) {
       const message = `Error fetching recipes: ${error}`;
@@ -172,9 +172,9 @@ export const useRecipeStore = defineStore("recipe", () => {
   };
 
   const fetchMealsByCategory = async (category: string) => {
-    if (mealsCategoryCache.has(category)) {
+    if (mealsCategoryCache.value[category]) {
       console.log(`Meals for ${category} already fetched, using cache.`);
-      mealsFilter.value = mealsAreaCache.get(category) ?? [];
+      mealsFilter.value = mealsCategoryCache.value[category];
       return;
     }
 
@@ -184,7 +184,7 @@ export const useRecipeStore = defineStore("recipe", () => {
       );
       const meals = res.meals ?? [];
 
-      mealsCategoryCache.set(category, meals); // Store fetched meals in cache
+      mealsCategoryCache.value[category] = meals;
       mealsFilter.value = meals;
     } catch (error) {
       const message = `Error fetching recipes: ${error}`;
@@ -194,9 +194,9 @@ export const useRecipeStore = defineStore("recipe", () => {
   };
 
   const fetchMealsByIngredient = async (ingredient: string) => {
-    if (mealsIngredientCache.has(ingredient)) {
+    if (mealsIngredientCache.value[ingredient]) {
       console.log(`Meals for ${ingredient} already fetched, using cache.`);
-      mealsFilter.value = mealsIngredientCache.get(ingredient) ?? [];
+      mealsFilter.value = mealsIngredientCache.value[ingredient];
       return;
     }
 
@@ -206,7 +206,7 @@ export const useRecipeStore = defineStore("recipe", () => {
       );
       const meals = res.meals ?? [];
 
-      mealsIngredientCache.set(ingredient, meals); // Store fetched meals in cache
+      mealsIngredientCache.value[ingredient] = meals;
       mealsFilter.value = meals;
     } catch (error) {
       const message = `Error fetching recipes: ${error}`;
