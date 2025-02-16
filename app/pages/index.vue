@@ -1,19 +1,7 @@
 <script setup lang="ts">
-import {
-  type MealsResponse,
-  type CategoriesResponse,
-  type Category,
-  type AreasResponse,
-  type Area,
-  type IngredientsResponse,
-  type Ingredient,
-} from "../../types/types";
+import { type Category, type Area, type Ingredient } from "../../types/types";
 
 definePageMeta({ layout: "home" }); // default layout will be used if not specified here
-
-// const { data, error } = await useFetch<MealsResponse>(
-//   "https://www.themealdb.com/api/json/v1/1/random.php"
-// );
 
 const recipeStore = useRecipeStore();
 
@@ -70,26 +58,6 @@ if (ingredientsData && ingredientsData.length > 0) {
 
 // Create a reactive reference to store the recipe
 const recipe = ref<{ idMeal: string | null }>({ idMeal: null });
-
-// async function showRandomRecipe() {
-//   const { data, error } = await useFetch<MealsResponse>(
-//     "https://www.themealdb.com/api/json/v1/1/random.php"
-//   );
-
-//   // Access the value inside the Ref
-//   const mealsData = data.value;
-
-//   // Safely access the meal ID and update the recipe Ref
-//   recipe.value.idMeal = mealsData?.meals?.[0]?.idMeal || null;
-
-//   if (recipe.value.idMeal) {
-//     console.log("Random Meal ID:", recipe.value.idMeal);
-
-//     navigateTo(`/recipes/${recipe.value.idMeal}`);
-//   } else {
-//     console.error("Meal ID not found in the response.");
-//   }
-// }
 
 useSeoMeta({
   title: "Nuxtcipes",

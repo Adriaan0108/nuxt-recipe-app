@@ -1,48 +1,48 @@
 <script setup lang="ts">
-import { type MealsResponse } from "../../../types/types";
+const recipeStore = useRecipeStore();
 
-const { id } = useRoute().params;
+const id = useRoute().params.id as string;
 
-const { data, error } = await useFetch<MealsResponse>(
-  `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-);
+const fetchMealById = async () => {
+  await recipeStore.fetchMealById(id);
+};
 
-// Access the value inside the Ref
-const mealsData = data.value;
+await fetchMealById();
 
-if (error.value) {
-  throw createError({
-    statusCode: error.value?.statusCode,
-    statusMessage: error.value?.statusMessage,
-  });
+const recipe = ref();
+const recipeData = recipeStore.recipe;
+const recipeError = recipeStore.mealsError;
+
+if (recipeData) {
+  recipe.value = recipeData;
+} else {
+  console.error(recipeError?.value || "Error fetching recipe");
 }
 
-interface Meal {
-  [key: string]: string | null | undefined; // Now includes undefined
-  strIngredient1?: string; // string | undefined is valid here
-  strMeasure1?: string; // string | undefined is valid here
-}
+const ingredients = computed(() => {
+  if (!recipe.value) return [];
 
-const ingredients =
-  data?.value?.meals && data.value.meals.length > 0
-    ? Object.entries(data.value.meals[0] as Meal)
-        .filter(
-          ([key, value]) =>
-            key.startsWith("strIngredient") && value && value.trim() !== ""
-        )
-        .map(([key, value]) => {
-          const measureKey = key.replace("strIngredient", "strMeasure");
-          const measurement =
-            (data?.value?.meals?.[0] as Meal)?.[measureKey] ?? "";
+  return Object.entries(recipe.value)
+    .filter(
+      ([key, value]) =>
+        key.startsWith("strIngredient") &&
+        typeof value === "string" &&
+        value.trim() !== ""
+    )
+    .map(([key, value]) => {
+      const measureKey = key.replace("strIngredient", "strMeasure");
+      const measurement = recipe.value[measureKey] ?? "";
 
-          return measurement || value
-            ? `${measurement || ""} ${value}`.trim()
-            : null;
-        })
-        .filter((item): item is string => item !== null)
-    : [];
+      return typeof value === "string" && typeof measurement === "string"
+        ? `${measurement} ${value}`.trim()
+        : null;
+    })
+    .filter((item): item is string => item !== null);
+});
 
 const parseInstructions = (instructionsString: string): string[] => {
+  if (!instructionsString) return [];
+
   return instructionsString
     .split(/\r?\n/)
     .filter(
@@ -54,19 +54,19 @@ const parseInstructions = (instructionsString: string): string[] => {
 };
 
 const instructions = computed(() =>
-  parseInstructions(mealsData?.meals?.[0]?.strInstructions || "")
+  parseInstructions(recipe.value?.strInstructions || "")
 );
 
 useSeoMeta({
-  title: mealsData?.meals?.[0]?.strMeal,
+  title: recipe.value?.strMeal,
   description: "Recipes to try!",
-  ogTitle: mealsData?.meals?.[0]?.strMeal,
+  ogTitle: recipe.value?.strMeal,
   ogDescription: "Recipes to try!",
-  ogImage: mealsData?.meals?.[0]?.strMealThumb,
-  ogUrl: `http:localhost:3000/recipes/${mealsData?.meals?.[0]?.idMeal}`,
-  twitterTitle: mealsData?.meals?.[0]?.strMeal,
+  ogImage: recipe.value?.strMealThumb,
+  ogUrl: `http://localhost:3000/recipes/${recipe.value?.idMeal}`,
+  twitterTitle: recipe.value?.strMeal,
   twitterDescription: "Recipes to try!",
-  twitterImage: mealsData?.meals?.[0]?.strMealThumb,
+  twitterImage: recipe.value?.strMealThumb,
   twitterCard: "summary",
 });
 </script>
@@ -76,16 +76,16 @@ useSeoMeta({
     <!-- Header -->
     <div class="flex flex-col mb-6">
       <h2 class="text-5xl mb-4 font-semibold">
-        {{ mealsData?.meals?.[0]?.strMeal }}
+        {{ recipe.strMeal }}
       </h2>
       <div class="flex gap-4 text-xl mb-6">
         <div class="flex items-center gap-1">
           <Icon name="mdi:earth" style="color: #f79f1a" />
-          <span>{{ mealsData?.meals?.[0]?.strArea }}</span>
+          <span>{{ recipe.strArea }}</span>
         </div>
         <div class="flex items-center gap-1">
           <Icon name="mdi:food" style="color: #f79f1a" />
-          <span>{{ mealsData?.meals?.[0]?.strCategory }}</span>
+          <span>{{ recipe.strCategory }}</span>
         </div>
         <!-- <div class="flex items-center gap-1">
           <Icon name="mdi:star" style="color: #f79f1a" />
@@ -97,7 +97,7 @@ useSeoMeta({
 
     <!-- Image -->
     <NuxtImg
-      :src="mealsData?.meals?.[0]?.strMealThumb"
+      :src="recipe.strMealThumb"
       densities="x1"
       sizes="xs:100vw sm:100vw md:100vw lg:100vw"
       class="w-full max-h-[500px] object-cover rounded-md shadow-sm mb-12"

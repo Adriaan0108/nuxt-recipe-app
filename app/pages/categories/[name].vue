@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { type FiltersResponse, type Filter } from "../../../types/types";
+const recipeStore = useRecipeStore();
 
-// Get the category from the route parameter
-const route = useRoute();
-const category = route.params.name as string;
+const category = useRoute().params.name as string;
 
-// Fetch meals for the category
-const { data, error } = await useFetch<FiltersResponse>(
-  `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
-);
-const meals = ref<Filter[]>([]);
+const fetchMealsByCategory = async () => {
+  await recipeStore.fetchMealsByCategory(category);
+};
 
-if (data.value && data.value.meals) {
-  meals.value = data.value.meals;
+await fetchMealsByCategory();
+
+const meals = ref();
+const mealsData = recipeStore.mealsFilter;
+const error = recipeStore.mealsFilterError;
+
+if (mealsData) {
+  meals.value = mealsData;
 } else {
-  console.error(
-    error?.value || `Error fetching meals for category: ${category}`
-  );
+  console.error(error?.value || "Error fetching recipes");
 }
 </script>
 
@@ -26,7 +26,7 @@ if (data.value && data.value.meals) {
       v-if="!error"
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8"
     >
-      <MealCard v-for="recipe in data?.meals" :meal="recipe" />
+      <MealCard v-for="recipe in meals" :meal="recipe" />
     </div>
     <p v-else class="text-xl">
       Oops, something went wrong. Please try again later.
