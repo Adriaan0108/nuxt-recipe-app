@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const router = useRouter();
+
 const recipeStore = useRecipeStore();
 
 const fetchRandomRecipe = async () => {
@@ -70,7 +72,10 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="flex flex-col max-w-screen-lg container py-20">
+  <div class="flex flex-col max-w-screen-lg container py-5">
+    <div class="mb-4">
+      <BaseBtn @click="router.back()" label="Back" />
+    </div>
     <!-- Header -->
     <div class="flex flex-col mb-6">
       <h2 class="text-5xl mb-4 font-semibold">
