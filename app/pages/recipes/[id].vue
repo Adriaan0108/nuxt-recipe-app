@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const router = useRouter();
+
 const recipeStore = useRecipeStore();
 
 const id = useRoute().params.id as string;
@@ -72,7 +74,10 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="flex flex-col max-w-screen-lg container py-20">
+  <div class="flex flex-col max-w-screen-lg container py-5">
+    <div class="mb-4">
+      <BaseBtn @click="router.back()" label="Back" />
+    </div>
     <!-- Header -->
     <div class="flex flex-col mb-6">
       <h2 class="text-5xl mb-4 font-semibold">
@@ -87,10 +92,6 @@ useSeoMeta({
           <Icon name="mdi:food" style="color: #f79f1a" />
           <span>{{ recipe.strCategory }}</span>
         </div>
-        <!-- <div class="flex items-center gap-1">
-          <Icon name="mdi:star" style="color: #f79f1a" />
-          <span>{{mealsData?.meals?.[0]?.strCategory}}</span>
-        </div> -->
       </div>
       <hr />
     </div>

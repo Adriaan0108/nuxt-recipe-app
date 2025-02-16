@@ -77,16 +77,16 @@ useSeoMeta({
   <main>
     <BaseNavigation class="sticky top-0 z-50 bg-white" />
 
-    <section class="py-5 container">
+    <section class="py-5 container pb-6">
       <div class="flex gap-4 mb-6">
         <button
           @click="activeTab = 'categories'"
           :class="{
             'border-b-4 border-dodgeroll-gold-400 text-dodgeroll-gold-400':
               activeTab === 'categories',
-            'text-gray-500': activeTab !== 'categories',
+            'text-black': activeTab !== 'categories',
           }"
-          class="flex-1 px-4 py-2 text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
+          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
         >
           Categories
         </button>
@@ -95,9 +95,9 @@ useSeoMeta({
           :class="{
             'border-b-4 border-dodgeroll-gold-400 text-dodgeroll-gold-400':
               activeTab === 'countries',
-            'text-gray-500': activeTab !== 'countries',
+            'text-black': activeTab !== 'countries',
           }"
-          class="flex-1 px-4 py-2 text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
+          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
         >
           Countries
         </button>
@@ -106,9 +106,9 @@ useSeoMeta({
           :class="{
             'border-b-4 border-dodgeroll-gold-400 text-dodgeroll-gold-400':
               activeTab === 'ingredients',
-            'text-gray-500': activeTab !== 'ingredients',
+            'text-black': activeTab !== 'ingredients',
           }"
-          class="flex-1 px-4 py-2 text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
+          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
         >
           Ingredients
         </button>
@@ -145,6 +145,9 @@ useSeoMeta({
           :ingredient="ingredient"
         />
       </div>
+    </section>
+    <section class="pt-5 container px-10">
+      <!-- Placeholder content or just an empty section to add spacing -->
     </section>
   </main>
 </template>

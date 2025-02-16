@@ -31,10 +31,6 @@ export const useRecipeStore = defineStore("recipe", () => {
   const ingredients = ref<Ingredient[]>([]);
   const ingredientsError = ref();
 
-  // const mealsAreaCache = new Map<string, Filter[]>(); // Cache to store fetched meals
-  // const mealsCategoryCache = new Map<string, Filter[]>();
-  // const mealsIngredientCache = new Map<string, Filter[]>();
-
   // Make cache reactive and persistent
   const mealsAreaCache = ref<Record<string, Filter[]>>({});
   const mealsCategoryCache = ref<Record<string, Filter[]>>({});
@@ -143,12 +139,6 @@ export const useRecipeStore = defineStore("recipe", () => {
   };
 
   const fetchMealsByArea = async (area: string) => {
-    // if (mealsAreaCache.has(area)) {
-    //   console.log(`Meals for ${area} already fetched, using cache.`);
-    //   mealsFilter.value = mealsAreaCache.get(area) ?? [];
-    //   return;
-    // }
-
     if (mealsAreaCache.value[area]) {
       console.log(`Meals for ${area} already fetched, using cache.`);
       mealsFilter.value = mealsAreaCache.value[area];

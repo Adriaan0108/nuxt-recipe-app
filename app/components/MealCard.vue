@@ -5,7 +5,7 @@ defineProps<{ meal: Filter }>();
 </script>
 
 <template>
-  <NuxtLink
+  <!-- <NuxtLink
     :to="`/recipes/${meal.idMeal}`"
     class="flex flex-col shadow rounded-md hover:shadow-lg transition-shadow duration-200"
   >
@@ -20,6 +20,27 @@ defineProps<{ meal: Filter }>();
       />
       <div class="flex flex-col py-6 px-4 flex-1">
         <p class="text-xl lg:text-2xl font-semibold mb-2">
+          {{ meal?.strMeal }}
+        </p>
+        <!- - <BaseBtn :to="`/recipes/${recipe?.idMeal}`" label="View" /> - ->
+      </div>
+    </div>
+  </NuxtLink> -->
+
+  <NuxtLink :to="`/recipes/${meal.idMeal}`" class="h-full">
+    <div
+      class="flex flex-col h-full shadow rounded-md hover:shadow-lg transition-shadow duration-200"
+    >
+      <NuxtImg
+        :src="meal?.strMealThumb"
+        sizes="xs:100vw sm:50vw lg:400px"
+        format="webp"
+        densities="x1"
+        alt=""
+        class="rounded-t-md"
+      />
+      <div class="flex flex-col py-6 px-4 flex-1">
+        <p class="text-xl lg:text-2xl font-semibold mb-2 text-center">
           {{ meal?.strMeal }}
         </p>
         <!-- <BaseBtn :to="`/recipes/${recipe?.idMeal}`" label="View" /> -->

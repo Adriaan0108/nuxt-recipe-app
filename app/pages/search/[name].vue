@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const router = useRouter();
+
 const route = useRoute();
 const search = route.params.name as string;
 
@@ -22,7 +24,10 @@ if (mealsData) {
 </script>
 
 <template>
-  <section class="py-20 container">
+  <section class="py-5 container">
+    <div class="mb-4">
+      <BaseBtn @click="router.back()" label="Back" />
+    </div>
     <div
       v-if="!error"
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8"

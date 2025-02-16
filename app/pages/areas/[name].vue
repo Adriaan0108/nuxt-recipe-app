@@ -1,22 +1,5 @@
 <script setup lang="ts">
-import { type FiltersResponse, type Filter } from "../../../types/types";
-
-// // Get the category from the route parameter
-// const route = useRoute();
-// const area = route.params.name as string;
-
-// // Fetch meals for the category
-// const { data, error } = await useFetch<FiltersResponse>(
-//   `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
-// );
-// const meals = ref<Filter[]>([]);
-
-// if (data.value && data.value.meals) {
-//   meals.value = data.value.meals;
-// } else {
-//   console.error(error?.value || `Error fetching meals for country: ${area}`);
-// }
-
+const router = useRouter();
 const recipeStore = useRecipeStore();
 
 const area = useRoute().params.name as string;
@@ -39,7 +22,10 @@ if (mealsData) {
 </script>
 
 <template>
-  <section class="py-20 container">
+  <section class="py-5 container">
+    <div class="mb-4">
+      <BaseBtn @click="router.back()" label="Back" />
+    </div>
     <div
       v-if="!error"
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8"

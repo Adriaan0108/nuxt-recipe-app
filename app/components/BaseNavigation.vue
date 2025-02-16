@@ -41,11 +41,13 @@ const handleSearch = () => {
           <NuxtLink to="/">Home</NuxtLink>
         </li> -->
         <li v-if="route != randomPath">
-          <NuxtLink :to="randomPath">Random Recipe</NuxtLink>
+          <NuxtLink :to="randomPath" class="hover:text-dodgeroll-gold-300"
+            >Random Recipe</NuxtLink
+          >
         </li>
-        <li>
+        <!-- <li>
           <NuxtLink to="/about">About</NuxtLink>
-        </li>
+        </li> -->
       </ul>
     </nav>
   </header>
