@@ -59,14 +59,41 @@ if (ingredientsData && ingredientsData.length > 0) {
 // Create a reactive reference to store the recipe
 const recipe = ref<{ idMeal: string | null }>({ idMeal: null });
 
+// Data and methods for dropdown functionality
+
+const isDropdownOpen = ref(false);
+
+// Dropdown options
+const dropdownOptions = [
+  { value: "categories", label: "Categories" },
+  { value: "countries", label: "Countries" },
+  { value: "ingredients", label: "Ingredients" },
+];
+
+// Function to toggle dropdown visibility
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+// Function to set the active tab and close the dropdown
+const selectTab = (tab: "categories" | "countries" | "ingredients") => {
+  activeTab.value = tab;
+  isDropdownOpen.value = false;
+};
+
+// Function to capitalize first letter of the tab name
+const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 useSeoMeta({
-  title: "Nuxtcipes",
+  title: "NuxtRecipes",
   description: "Recipes to try!",
-  ogTitle: "Nuxtcipes",
+  ogTitle: "NuxtRecipes",
   ogDescription: "Recipes to try!",
   ogImage: "/nuxt-course-hero.png",
   ogUrl: `http:localhost:3000`,
-  twitterTitle: "Nuxtcipes",
+  twitterTitle: "NuxtRecipes",
   twitterDescription: "Recipes to try!",
   twitterImage: "/nuxt-course-hero.png",
   twitterCard: "summary",
@@ -78,7 +105,61 @@ useSeoMeta({
     <BaseNavigation class="sticky top-0 z-50 bg-white" />
 
     <section class="py-5 container pb-6">
-      <div class="flex gap-4 mb-6">
+      <!-- Responsive Navigation: Dropdown on mobile, Tabs on larger screens -->
+
+      <div class="block md:hidden">
+        <!-- <select
+          v-model="activeTab"
+          class="w-full px-4 py-2 text-xl font-bold border rounded-lg shadow-md"
+        >
+          <option value="categories">Categories</option>
+          <option value="countries">Countries</option>
+          <option value="ingredients">Ingredients</option>
+        </select> -->
+
+        <div class="relative">
+          <button
+            @click="toggleDropdown"
+            class="w-full px-4 py-2 text-xl font-semibold border rounded-lg shadow-md flex justify-between items-center"
+          >
+            <span>{{ capitalize(activeTab) }}</span>
+            <!-- Arrow icon change based on dropdown state -->
+            <!-- Use mdi-chevron-down and mdi-chevron-up icons -->
+            <span>
+              <Icon
+                v-if="!isDropdownOpen"
+                name="mdi:chevron-down"
+                class="text-black w-8 h-8 mt-2"
+              />
+              <Icon
+                v-if="isDropdownOpen"
+                name="mdi:chevron-up"
+                class="text-black w-8 h-8 mt-2"
+              />
+            </span>
+          </button>
+          <!-- Dropdown Menu -->
+          <div
+            v-if="isDropdownOpen"
+            class="absolute left-0 w-full mt-1 bg-white shadow-lg rounded-lg z-10"
+          >
+            <div
+              v-for="option in dropdownOptions"
+              :key="option.value"
+              @click="
+                selectTab(
+                  option.value as 'categories' | 'countries' | 'ingredients'
+                )
+              "
+              class="px-4 py-2 text-xl text-gray-700 cursor-pointer hover:bg-dodgeroll-gold-400 hover:text-white"
+            >
+              {{ option.label }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden md:flex gap-4 mb-6">
         <button
           @click="activeTab = 'categories'"
           :class="{
@@ -151,3 +232,10 @@ useSeoMeta({
     </section>
   </main>
 </template>
+
+<style scoped>
+/* Add styles for the arrows if needed */
+svg {
+  transition: transform 0.3s ease-in-out; /* Smooth transition */
+}
+</style>
