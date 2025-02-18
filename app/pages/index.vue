@@ -103,8 +103,9 @@ useSeoMeta({
 <template>
   <main>
     <BaseNavigation class="sticky top-0 z-50 bg-white" />
-
-    <section class="py-5 container pb-6">
+    <section
+      class="py-5 container pb-6 sticky top-20 z-40 bg-white after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-4 after:bg-gradient-to-b after:from-white after:to-transparent"
+    >
       <!-- Responsive Navigation: Dropdown on mobile, Tabs on larger screens -->
 
       <div class="block md:hidden">
@@ -120,7 +121,7 @@ useSeoMeta({
         <div class="relative">
           <button
             @click="toggleDropdown"
-            class="w-full px-4 py-2 text-xl font-semibold border rounded-lg shadow-md flex justify-between items-center"
+            class="w-full px-4 py-2 text-xl font-semibold border rounded-lg shadow-md flex justify-between items-center bg-white"
           >
             <span>{{ capitalize(activeTab) }}</span>
             <!-- Arrow icon change based on dropdown state -->
@@ -159,7 +160,7 @@ useSeoMeta({
         </div>
       </div>
 
-      <div class="hidden md:flex gap-4 mb-6">
+      <div class="hidden md:flex gap-4 mb-6 bg-white">
         <button
           @click="activeTab = 'categories'"
           :class="{
@@ -167,18 +168,18 @@ useSeoMeta({
               activeTab === 'categories',
             'text-black': activeTab !== 'categories',
           }"
-          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
+          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300 bg-white"
         >
           Categories
         </button>
         <button
           @click="activeTab = 'countries'"
           :class="{
-            'border-b-4 border-dodgeroll-gold-400 text-dodgeroll-gold-400':
+            'border-b-4 border-dodgeroll-gold-400 text-dodgeroll-gold-400 ':
               activeTab === 'countries',
             'text-black': activeTab !== 'countries',
           }"
-          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
+          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300 bg-white"
         >
           Countries
         </button>
@@ -189,7 +190,7 @@ useSeoMeta({
               activeTab === 'ingredients',
             'text-black': activeTab !== 'ingredients',
           }"
-          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300"
+          class="flex-1 px-4 py-2 text-xl font-bold text-center transition-all duration-200 hover:text-dodgeroll-gold-300 bg-white"
         >
           Ingredients
         </button>
@@ -234,8 +235,8 @@ useSeoMeta({
 </template>
 
 <style scoped>
-/* Add styles for the arrows if needed */
-svg {
-  transition: transform 0.3s ease-in-out; /* Smooth transition */
-}
+/* Add spacing to prevent content from appearing behind the fixed header */
+/* main {
+  padding-top: env(safe-area-inset-top, 0px);
+} */
 </style>
