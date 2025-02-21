@@ -35,7 +35,7 @@ const toggleMenu = () => {
         <NuxtImg
           width="56px"
           densities="x1"
-          src="/icon-green.png"
+          src="/logo.svg"
           format="webp"
           alt="NuxtRecipes Logo"
         />
