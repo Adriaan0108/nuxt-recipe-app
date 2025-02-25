@@ -56,11 +56,7 @@ if (ingredientsData && ingredientsData.length > 0) {
   console.error(ingredientsError?.value || "Error fetching ingredients");
 }
 
-// Create a reactive reference to store the recipe
-const recipe = ref<{ idMeal: string | null }>({ idMeal: null });
-
 // Data and methods for dropdown functionality
-
 const isDropdownOpen = ref(false);
 
 // Dropdown options

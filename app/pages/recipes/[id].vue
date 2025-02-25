@@ -21,43 +21,63 @@ if (recipeData) {
   console.error(recipeError?.value || "Error fetching recipe");
 }
 
+// Computed property to extract and format ingredients from the recipe data
 const ingredients = computed(() => {
+  // Return empty array if recipe isn't loaded yet
   if (!recipe.value) return [];
 
-  return Object.entries(recipe.value)
-    .filter(
-      ([key, value]) =>
-        key.startsWith("strIngredient") &&
-        typeof value === "string" &&
-        value.trim() !== ""
-    )
-    .map(([key, value]) => {
-      const measureKey = key.replace("strIngredient", "strMeasure");
-      const measurement = recipe.value[measureKey] ?? "";
+  // Create an array of ingredients with their measurements
+  const result = [];
 
-      return typeof value === "string" && typeof measurement === "string"
-        ? `${measurement} ${value}`.trim()
-        : null;
-    })
-    .filter((item): item is string => item !== null);
+  // Loop through all properties of the recipe
+  for (const [key, value] of Object.entries(recipe.value)) {
+    // Check if this property is an ingredient and has a value
+    if (
+      key.startsWith("strIngredient") &&
+      typeof value === "string" &&
+      value.trim() !== ""
+    ) {
+      // Find the corresponding measurement
+      // Replace the text "strIngredient" with "strMeasure", creating a new property name (like strMeasure1)
+      const measureKey = key.replace("strIngredient", "strMeasure");
+      const measurement = recipe.value[measureKey] || "";
+
+      // Combine measurement and ingredient
+      if (typeof measurement === "string") {
+        result.push(`${measurement} ${value}`.trim());
+      }
+    }
+  }
+
+  return result;
 });
 
-const parseInstructions = (instructionsString: string): string[] => {
-  if (!instructionsString) return [];
+// Function to convert the instructions string into an array of steps
+function parseInstructions(instructionsText: string): string[] {
+  // Return empty array if no instructions
+  if (!instructionsText) return [];
 
-  return instructionsString
-    .split(/\r?\n/)
-    .filter(
-      (instruction) =>
-        instruction.trim() !== "" &&
-        !instruction.toLowerCase().includes("nutrition facts")
-    )
-    .map((instruction) => instruction.replace(/^\d+\.\s*/, "").trim());
-};
+  // Split the text by newlines
+  return instructionsText
+    .split(/\r?\n/) // Split by any type of newline
+    .filter((line) => {
+      // Remove empty lines and nutrition facts
+      const trimmedLine = line.trim();
+      return (
+        trimmedLine !== "" &&
+        !trimmedLine.toLowerCase().includes("nutrition facts")
+      );
+    })
+    .map((line) => {
+      // Remove numbering from the beginning of instructions
+      return line.replace(/^\d+\.\s*/, "").trim();
+    });
+}
 
-const instructions = computed(() =>
-  parseInstructions(recipe.value?.strInstructions || "")
-);
+// Computed property to get formatted instructions
+const instructions = computed(() => {
+  return parseInstructions(recipe.value?.strInstructions || "");
+});
 
 useSeoMeta({
   title: recipe.value?.strMeal,
