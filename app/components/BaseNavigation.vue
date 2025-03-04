@@ -40,7 +40,7 @@ const toggleMenu = () => {
           alt="NuxtRecipes Logo"
         />
         <!-- <span class="text-3xl font-bold">NuxtRecipes</span> -->
-        <span class="text-2xl md:text-3xl font-bold">NuxtRecipes</span>
+        <span class="text-2xl md:text-3xl font-bold">NuxtRecipes AAA</span>
       </NuxtLink>
 
       <div class="hidden md:flex flex-1 justify-center gap-4">
