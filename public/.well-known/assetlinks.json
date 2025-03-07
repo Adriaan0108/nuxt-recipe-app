@@ -3,8 +3,8 @@
     "target": {
       "namespace": "android_app",
       "package_name": "app.netlify.nuxt_recipes.twa",
-      "sha256_cert_fingerprints": [
-        "36:43:FE:98:85:3C:BC:AB:F7:A0:58:46:95:7C:A2:83:F6:8A:C3:E0:E3:49:6E:70:05:29:5D:7D:F4:E2:29:63"
+     "sha256_cert_fingerprints": [
+        "8B:81:4B:30:A4:4A:1B:70:BB:7C:27:BB:49:67:7C:E1:77:76:62:E5:CE:12:42:35:4C:2F:B8:1D:4E:6A:E6:E9"
       ]
     }
   }
